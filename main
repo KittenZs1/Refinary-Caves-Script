@@ -78,7 +78,7 @@ tpBTN(-596, 194, 1058, "Cable Railway")
 tpBTN(480, 300, 708, "Meteor Bowl")
 tpBTN(612, 986, 1519, "Mountain Chair")
 
-local teleportOre = serv:Channel("Teleports: Ore")
+  local teleportOre = serv:Channel("Teleports: Ore")
     local function teleportToOreBTN(rockType) 
         teleportOre:Button(
             rockType,
@@ -97,6 +97,93 @@ local teleportOre = serv:Channel("Teleports: Ore")
             end
         )
     end
+    -- WIP
+    local tpe = serv:Channel("Teleports: Entities")
+    local studs, savedPos, tpSpeed, tries = 10, nil, 1, 1
+    tpe:Button("Set Position", function()
+        if getgenv().glow then
+            getgenv().glow:Destroy()
+        end
+        -- creates a glowing object that shows the saved position        
+        savedPos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+        getgenv().glow = Instance.new("Part")
+        getgenv().glow.Anchored = true
+        getgenv().glow.CanCollide = false
+        getgenv().glow.Size = Vector3.new(1,1,1)
+        getgenv().glow.Transparency = 0.5
+        getgenv().glow.Color = Color3.fromRGB(255, 0, 0)
+        getgenv().glow.Material = Enum.Material.Neon
+        getgenv().glow.Name = "Glow"
+        getgenv().glow.Parent = game.Workspace
+        getgenv().glow.CFrame = savedPos
+        DiscordLib:Notification("Notification", "Position Set!", "Okay!")
+    end)    
+    tpe:Slider("Speed", 1,100,1,
+        function(value)
+            tpSpeed = value
+        end
+    )
+    tpe:Slider("Tries", 1,100,1,
+        function(value)
+            tries = value
+        end
+    )
+    tpe:Slider("Studs",10,100,0,
+        function(t)
+            studs = t
+        end
+    )
+    local entities = {}
+    local d = game.Players.LocalPlayer.Character.HumanoidRootPart
+    local r = 0
+    task.spawn(function()
+        while localuuid==getgenv().uuid do
+            task.wait(0)
+            if #entities > 0 then
+                local v = entities[1]                
+                if v:FindFirstChild("Owner") and v:FindFirstChild("Part") then -- checks if its valid obj
+                    --if v.Part.Position.X < d.Position.X + studs/2 and v.Part.Position.X > d.Position.X - studs/2 and v.Part.Position.Z < d.Position.Z + studs/2 and v.Part.Position.Z > d.Position.Z - studs/2 then
+                    if r <= tries then
+                        r = r + 1
+                        -- teleports to the object
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Part.CFrame
+                        game:GetService("ReplicatedStorage").Events.Grab:InvokeServer(v.Part,{})
+                        task.wait(tpSpeed/100)
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedPos
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Part.CFrame
+                        v:FindFirstChild("Part").CFrame = savedPos
+                    else
+                        r = 0
+                        table.remove(entities, 1)
+                    end
+                end
+            end
+        end
+    end)
+    tpe:Button("Teleport", function()
+        if savedPos then
+            -- get all entities in studs/2 radius
+            local count = 0
+            d = game.Players.LocalPlayer.Character.HumanoidRootPart
+            for i, v in pairs(game:GetService("Workspace").Grabable:GetChildren()) do
+                if v:FindFirstChild("Owner") and v:FindFirstChild("Part") then -- checks if its valid obj
+                    if v.Part.Position.X < d.Position.X + studs/2 and v.Part.Position.X > d.Position.X - studs/2 and v.Part.Position.Z < d.Position.Z + studs/2 and v.Part.Position.Z > d.Position.Z - studs/2 then
+                        entities[#entities+1] = v
+                    end
+                end
+            end
+            -- teleports to the entity and tries to teleport it until its successful then removes from table
+
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Part.CFrame
+            task.wait(0.3)
+            v.Part.CFrame = savedPos
+
+            count = count + 1
+            DiscordLib:Notification("Notification", "Teleported "..count.." Entities!", "Okay!")
+        else
+            DiscordLib:Notification("Notification", "No Position Set!", "Okay!")
+        end
+    end)
 
     -- get all ores
     local array = {
