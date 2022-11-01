@@ -18,7 +18,14 @@ end)
 -- Local Player
     LocalChannel:Slider("Speed",16,250,0,
         function(t)
-            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = t
+            task.spawn(function()
+                while true do
+                    wait(0)
+                    pcall(function()
+                         game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = t
+                        end)
+                    end
+                end)
         end
     )
     LocalChannel:Slider("Jump",50,250,0,
