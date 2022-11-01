@@ -7,7 +7,6 @@ local serv = win:Server("Refinary Caves", "")
 local main = serv:Channel("Main")
 local LocalChannel = serv:Channel("Local Player")
 local teleports = serv:Channel("Teleports")
-local teleportOre = serv:Channel("Teleport Ores")
 task.spawn(function()
     while true do
         wait(0)
@@ -72,6 +71,26 @@ tpBTN(-596, 194, 1058, "Cable Railway")
 tpBTN(480, 300, 708, "Meteor Bowl")
 tpBTN(612, 986, 1519, "Mountain Chair")
 
+local teleportOre = serv:Channel("Teleports: Ore")
+    local function teleportToOreBTN(rockType) 
+        teleportOre:Button(
+            rockType,
+            function()
+                for i, v in next, game:GetDescendants() do
+                    if v.Name == "RockString" and v:IsA("StringValue") and v.Value == rockType then
+                        for i2, v2 in next, v.Parent:GetDescendants() do
+                            if v2.Name == "Hitbox" then
+                                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v2.CFrame + Vector3.new(0, 5, 0)
+                                return
+                            end
+                        end
+                    end
+                end
+                DiscordLib:Notification("Notification", "Could not find ore", "Okay!")
+            end
+        )
+    end
+
     -- get all ores
     local array = {
         "Rock",
@@ -96,7 +115,9 @@ tpBTN(612, 986, 1519, "Mountain Chair")
         "Volcanium",
         "Moonstone",
         "Tolmedit",
-        "Dumortierite"
+        "Dumortierite",
+        "Soulstone",
+        "Pumpkin"
     }
     teleportOre:Button(
         "Teleport Ores to Plot",
