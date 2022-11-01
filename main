@@ -115,9 +115,7 @@ local teleportOre = serv:Channel("Teleports: Ore")
         "Volcanium",
         "Moonstone",
         "Tolmedit",
-        "Dumortierite",
-        "Soulstone",
-        "Pumpkin"
+        "Dumortierite"
     }
     teleportOre:Button(
         "Teleport Ores to Plot",
