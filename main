@@ -1,1 +1,185 @@
+local DiscordLib =
+    loadstring(game:HttpGet "https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/discord")()
 
+local win = DiscordLib:Window("Refinary Caves")
+
+local serv = win:Server("Refinary Caves", "")
+local main = serv:Channel("Main")
+local LocalChannel = serv:Channel("Local Player")
+local teleports = serv:Channel("Teleports")
+local teleportOre = serv:Channel("Teleport Ores")
+task.spawn(function()
+    while true do
+        wait(0)
+        pcall(function()
+            game.Players.LocalPlayer.Character["OwoChan Character"]:Destroy()
+        end)
+    end
+end)
+-- Local Player
+    LocalChannel:Slider("Speed",16,250,0,
+        function(t)
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = t
+        end
+    )
+    LocalChannel:Slider("Jump",50,250,0,
+        function(t)
+            game.Players.LocalPlayer.Character.Humanoid.JumpPower = t
+        end
+    )
+
+-- Teleports
+local function tpBTN(x,y,z, name)
+    teleports:Button(
+        name,
+        function()               
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(x,y,z)
+        end
+    )    
+end
+tpBTN(-913,3,-671,"Spawn")
+teleports:Button(
+    "Plot",
+    function()
+        for i, v in next, game:GetService("Workspace").Plots:GetChildren() do
+            if v.Owner.Value == game.Players.LocalPlayer then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Base.CFrame + Vector3.new(0, 25, 0)
+            end
+        end
+    end
+)
+tpBTN(-1005,3,-613,"UCS")
+tpBTN(-1007,4.74,-728,"Land Agency")
+tpBTN(-1028,4,-589.5,"Delivery Man")
+tpBTN(-822.2,60,-609,"Green Block")
+tpBTN(-1574,-6.4,-518.75,"Dock")
+tpBTN(-1333,-3.3,-437,"Shore")
+tpBTN(-1412,-14,-285.2,"Rusty Boat")
+tpBTN(-1225, 78.7, -103, "Bloxy Cola")
+tpBTN(-466,5.75,13,"Wood Store")
+tpBTN(-460,3.85,-95.5,"Sell Area")
+tpBTN(-1018.8,4.25,690.5,"Furniture Store")
+tpBTN(709.9,8.25,-966.97,"Dealership")
+tpBTN(734, 2.25, 55,"Pickaxe Store")
+tpBTN(-108.75,240,1128.46,"Logic Store")
+tpBTN(-496, 4.25, -655,"Secret Stash")
+tpBTN(130, 88, 1073, "Trusty Pickaxe Area")
+tpBTN(-795, -4.25, 2750, "Facility")
+tpBTN(-763, -55, 2529, "RadiRug")
+tpBTN(-3475, 17.9, 1040,"Meteor Rug")
+tpBTN(-2153, -12.9, -1622,"Island")
+tpBTN(-596, 194, 1058, "Cable Railway")
+tpBTN(480, 300, 708, "Meteor Bowl")
+tpBTN(612, 986, 1519, "Mountain Chair")
+
+    -- get all ores
+    local array = {
+        "Rock",
+        "Stone",
+        "Sandstone",
+        "Limestone",
+        "Granite",
+        "Marble",
+        "Copper",
+        "Silver",
+        "Iron",
+        "Gold",
+        "Emerald",
+        "Ruby",
+        "Amethyst",
+        "Sapphire",
+        "Oddstone",
+        "Sunstone",
+        "Crystal",
+        "Cloudnite",
+        "Obsidian",
+        "Volcanium",
+        "Moonstone",
+        "Tolmedit",
+        "Dumortierite"
+    }
+    teleportOre:Button(
+        "Teleport Ores to Plot",
+        function()
+            local pos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+            for _, v in next, game:GetService("Workspace").Grabable:GetChildren() do
+                if v:FindFirstChild("Owner") and v:FindFirstChild("Configuration") and v.Configuration:FindFirstChild("Data") 
+                and v.Configuration.Data:FindFirstChild("MatInd") and v.Configuration.Data:FindFirstChild("Size") then
+                    if v.Owner.Value == game.Players.LocalPlayer then
+                        -- finds the plot
+                        for _, l in next, game:GetService("Workspace").Plots:GetChildren() do
+                            if l.Owner.Value == game.Players.LocalPlayer then
+                                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Part.CFrame
+                                task.wait(timeout)
+                                v.Part.CFrame = l.Base.CFrame + Vector3.new(0, 25, 0)
+                            end
+                        end
+                    end
+                end
+            end
+            task.wait(timeout)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(pos.X, pos.Y, pos.Z)
+        end
+    )
+    teleportOre:Button(
+        "Teleport Ores to Current Pos",
+        function()
+            local pos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+            for _, v in next, game:GetService("Workspace").Grabable:GetChildren() do
+                if v:FindFirstChild("Owner") and v:FindFirstChild("Configuration") and v.Configuration:FindFirstChild("Data") 
+                and v.Configuration.Data:FindFirstChild("MatInd") and v.Configuration.Data:FindFirstChild("Size") then
+                    if v.Owner.Value == game.Players.LocalPlayer then
+                        for _, l in next, game:GetService("Workspace").Plots:GetChildren() do
+                            if l.Owner.Value == game.Players.LocalPlayer then
+                                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Part.CFrame
+                                v.Part.CFrame = CFrame.new(pos.X, pos.Y, pos.Z)
+                                task.wait(timeout)
+                            end
+                        end
+                    end
+                end
+            end
+            task.wait(timeout)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(pos.X, pos.Y+3, pos.Z)
+        end
+    )
+    teleportOre:Button(
+        "Teleport Ores to Sell",
+        function()
+            for _, v in next, game:GetService("Workspace").Grabable:GetChildren() do
+                if v:FindFirstChild("Owner") and v:FindFirstChild("Configuration") and v.Configuration:FindFirstChild("Data") 
+                and v.Configuration.Data:FindFirstChild("MatInd") and v.Configuration.Data:FindFirstChild("Size") then
+                    if v.Owner.Value == game.Players.LocalPlayer then
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Part.CFrame
+                        task.wait(timeout)
+                        -- places the ore in the sell area
+                        -- v.Part.CFrame = CFrame.new(-420, 12, -75)
+                        -- places it somewhere randomly inside from -404, 8,-85 to -439, 8,-67
+                        v.Part.CFrame = CFrame.new(math.random(404, 436)*-1, 8, math.random(67,85)*-1)
+                    end
+                end
+            end
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-455,5.75,-57.7)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.Map.Sellary.Keeper.IPart.CFrame
+            task.wait(1)
+            workspace.Map.Sellary.Keeper.IPart.Interact:FireServer()
+            task.wait(1)
+            for i, v in pairs(
+                getconnections(
+                    game:GetService("Players").LocalPlayer.PlayerGui.UserGui.Dialog:WaitForChild("Yes").MouseButton1Click
+                )
+            ) do
+                v:Fire()
+            end
+        end
+    )
+    local time = 0.05
+    teleportOre:Slider(
+        "Teleport Ores Speed",
+        0,
+        500,
+        5,
+        function(value)
+            time = value/100
+        end
+    )
