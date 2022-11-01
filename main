@@ -357,6 +357,51 @@ tpBTN(612, 986, 1519, "Mountain Chair")
             end
 		)
 	end
+
+    local notS, notR, notI = false, false, false
+    local function getTrusty()
+        -- pre check if all 3 pickaxes are existing
+        for i, v in next, game:GetService("Workspace").Grabable:GetChildren() do
+            if v.Name == "Boxed Stone Pickaxe" then
+                notS = true
+            elseif v.Name == "Boxed Rusty Pickaxe" then
+                notR = true
+            elseif v.Name == "Boxed Iron Pickaxe" then
+                notI = true
+            end
+        end
+        if not notS or not notR or not notI then
+            DiscordLib:Notification("Notification", "Pickaxes Haven't Regenerated yet!", "Okay!")
+            return
+        end
+        for i,v in next, game:GetService("Workspace").Grabable:GetChildren() do
+            if ((v.Name == "Boxed Stone Pickaxe" and notS) or (v.Name == "Boxed Rusty Pickaxe" and notR) or (v.Name == "Boxed Iron Pickaxe" and notI)) and v:FindFirstChild("Part") then
+                if not (v.Part.Position.X < 143+10 and v.Part.Position.X > 143-10 and v.Part.Position.Z < 1105+10 and v.Part.Position.Z > 1105-10) and v.Part.Position.Y > 1 then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Part.CFrame
+                    game:GetService("ReplicatedStorage").Events.Grab:InvokeServer(v.Part,{})
+                    task.wait(0.1)
+                    v:FindFirstChild("Part").CFrame = CFrame.new(143, 83, 1105)
+                    task.wait(1.5)
+                end
+            end
+        end
+    end
+
+
+    main:Button(
+        "Give Trusty Pickaxe",
+        function ()
+            local t = 0
+            while t<15 do
+                task.spawn(getTrusty)
+                task.wait(0.2)
+                t = t + 1
+            end
+            DiscordLib:Notification("Notification", "Spawned Trusty Pickaxe!", "Okay!")
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(135, 88, 1088)
+        end
+    )
+
 	 -- changelog
     local changelog = serv:Channel("Changelog")
     local change = {
