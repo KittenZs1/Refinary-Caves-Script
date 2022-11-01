@@ -355,5 +355,15 @@ tpBTN(612, 986, 1519, "Mountain Chair")
                     end
                 end
             end
-        )
+		)
+	end
+	 -- changelog
+    local changelog = serv:Channel("Changelog")
+    local change = {
+        "Update 1.0.0 - 10/24/2022",
+        "- Initial Release",
+		"- Fixed Anti Cheat"
+    }
+    for i,v in pairs(change) do
+        changelog:Label(v)
     end
