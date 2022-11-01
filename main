@@ -209,7 +209,14 @@ tpBTN(612, 986, 1519, "Mountain Chair")
         "Volcanium",
         "Moonstone",
         "Tolmedit",
-        "Dumortierite"
+        "Dumortierite",
+        "Dirt",
+        "Astatine",
+        "Mythril",
+        "Soulstone",
+        "Pumpkin",
+        "Candy Corn",
+        "Cursed Pumpkin"
     }
     teleportOre:Button(
         "Teleport Ores to Plot",
