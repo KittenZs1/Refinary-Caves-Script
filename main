@@ -296,3 +296,57 @@ tpBTN(612, 986, 1519, "Mountain Chair")
             time = value/100
         end
     )
+      teleportOre:Seperator()
+    for i,v in next, array do
+        teleportToOreBTN(v)
+    end
+    -- checks if a player presses the F key
+    local function checkF()
+        local plr = game.Players.LocalPlayer
+        local mouse = plr:GetMouse()
+        mouse.KeyDown:Connect(
+            function(key)
+                if key == "f" then
+                    for r, i in next, game:GetService("Workspace").Grabable:GetDescendants() do
+                        if i.Name == "Grab" then
+                            if i:FindFirstChild("Plr") then
+                                for t, b in next, game:GetService("Workspace").Plots:GetChildren() do
+                                    if b.Owner.Value == game.Players.LocalPlayer then
+                                        i.Parent.CFrame = b.Base.CFrame + Vector3.new(0, 25, 0)
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        )
+    end
+    checkF()
+    local function checkH()
+        local plr = game.Players.LocalPlayer
+        local mouse = plr:GetMouse()
+        mouse.KeyDown:Connect(
+            function(key)
+                if key == "h" then
+                    for r, i in next, game:GetService("Workspace").Grabable:GetDescendants() do
+                        if i.Name == "Grab" then
+                            if i:FindFirstChild("Plr") then
+                                v.Part.CFrame = CFrame.new(math.random(404, 436)*-1, 8, math.random(67,85)*-1)
+                                task.wait(1)
+                                workspace.Map.Sellary.Keeper.IPart.Interact:FireServer()
+                                task.wait(1)
+                                for i, v in pairs(
+                                    getconnections(
+                                        game:GetService("Players").LocalPlayer.PlayerGui.UserGui.Dialog:WaitForChild("Yes").MouseButton1Click
+                                    )
+                                ) do
+                                    v:Fire()
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        )
+    end
