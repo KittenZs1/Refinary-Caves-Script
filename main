@@ -6,6 +6,7 @@ local win = DiscordLib:Window("Refinary Caves")
 local serv = win:Server("Refinary Caves", "")
 local main = serv:Channel("Main")
 local LocalChannel = serv:Channel("Local Player")
+local misc = serv:Channel("Misc")
 local teleports = serv:Channel("Teleports")
 task.spawn(function()
     while true do
@@ -18,14 +19,7 @@ end)
 -- Local Player
     LocalChannel:Slider("Speed",16,250,0,
         function(t)
-            task.spawn(function()
-                while true do
-                    wait(0)
-                    pcall(function()
                          game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = t
-                        end)
-                    end
-                end)
         end
     )
     LocalChannel:Slider("Jump",50,250,0,
@@ -455,12 +449,93 @@ tpBTN(612, 986, 1519, "Mountain Chair")
     main:Label("Hotkeys")
     main:Label("F - Teleport ores to plot")
     main:Label("H - Teleport ores to sell")    
+    -- misc --
+     misc:Button(
+        "No Damage",
+        function()
+            local events = {
+                Fire = true,
+                Invoke = true,
+                FireServer = true,
+                InvokeServer = true
+            }
+
+            local gmeta = getrawmetatable(game)
+            setreadonly(gmeta, false)
+            local psuedoEnv = {
+                ["__index"] = gmeta.__index,
+                ["__namecall"] = gmeta.__namecall
+            }
+            gmeta.__index, gmeta.__namecall =
+            newcclosure(
+                function(self, index, ...)
+                    if events[index] then
+                        if "DamageMe" == self.Name and not checkcaller() then
+                            return nil
+                        end
+                    end
+                    return psuedoEnv.__index(self, index, ...)
+                end
+            )
+            setreadonly(gmeta, true)
+        end
+    )
+    misc:Button(
+        "No Blur",
+        function()
+            game:GetService("Lighting").WaterBlur:Destroy()
+            game:GetService("Lighting").Blur:Destroy()
+            DiscordLib:Notification("No Blur", "No Blur has been enabled", "Okay")
+        end
+    )
+    misc:Toggle(
+        "No Shadows",
+        false,
+        function(t)
+            if t then 
+                DiscordLib:Notification("No Shadows", "No Shadows has been enabled", "Okay")
+            else
+                DiscordLib:Notification("No Shadows", "No Shadows has been disabled", "Okay")
+            end
+            game:GetService("Lighting").Shadows = t
+        end
+    )
+    -- places a light on the players head
+    misc:Toggle(
+        "Head Light",
+        false,
+        function(t)
+            if t then
+                local light = Instance.new("PointLight")
+                light.Parent = game.Players.LocalPlayer.Character.Head
+                light.Range = 100
+                light.Brightness = 1
+                light.Color = Color3.fromRGB(255, 255, 255)
+                DiscordLib:Notification("Head Light", "Head Light has been enabled", "Okay")
+            else
+                game.Players.LocalPlayer.Character.Head.PointLight:Destroy()
+                DiscordLib:Notification("Head Light", "Head Light has been disabled", "Okay")
+            end
+        end
+    )
+     misc:Toggle("Show Full Money", true, function(t)
+        if t then
+            mts = true
+            DiscordLib:Notification("Show Full Money", "Showing full money has been enabled", "Okay")
+        else
+            mts = false
+            DiscordLib:Notification("Show Full Money", "Showing full money has been disabled", "Okay")
+        end
+    end)
 	 -- changelog
     local changelog = serv:Channel("Changelog")
     local change = {
-        "Update 1.0.0 - 10/24/2022",
+        "Update 1.0.0 - 11/01/2022",
         "- Initial Release",
-		"- Fixed Anti Cheat"
+		"- Fixed Anti Cheat",
+	"",
+	"Update 1.0.1 - 11/02/2022",
+	"Added Misc tab"
     }
     for i,v in pairs(change) do
         changelog:Label(v)
